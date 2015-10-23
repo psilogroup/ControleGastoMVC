@@ -1,0 +1,86 @@
+﻿@{
+    ViewBag.Title = "Graficos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-lg-12">
+
+ 
+
+    <div class="col-lg-5">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading"></div>
+            <div class="panel-body">
+                <div id="piechart_div"></div>
+            </div>
+
+        </div>
+    </div>
+
+        <div class="col-lg-5">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading"></div>
+            <div class="panel-body">
+                <div id="barchart_div"></div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+
+        // Load the Visualization API and the piechart package.
+        google.load('visualization', '1.0', { 'packages': ['corechart'] });
+
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            $.ajax({
+                type: "GET",
+                url: "/Gasto/BuscarDadosConsolidados",
+                success: function (data) {
+                    if (data.Status == "OK") {
+                        var tablePie = new google.visualization.DataTable();
+                        var tableBar = new google.visualization.DataTable();
+
+                        tablePie.addColumn('string', 'Topping');
+                        tablePie.addColumn('number', 'Categoria');
+                        
+
+                        
+                        for (i = 0; i < data.Data.length; i++) {
+                            tablePie.addRows([[data.Data[i].Categoria, data.Data[i].Valor]]);
+                            
+                        }
+                        
+                        var optionsPie = {
+                            'title': 'Gastos por Categoria',
+                            'width': 400,
+                            'height': 300
+                        };
+
+                        
+                        
+                        var pieChart = new google.visualization.PieChart(document.getElementById('piechart_div'));
+                        pieChart.draw(tablePie, optionsPie);
+
+                        var barChart = new google.visualization.BarChart(document.getElementById('barchart_div'));
+                        barChart.draw(tablePie, optionsPie);
+                        
+                   
+                    }
+                }
+            });
+        }
+    </script>
+
+}
