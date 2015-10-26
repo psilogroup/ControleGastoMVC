@@ -1,0 +1,10 @@
+body {
+  padding-top: 50px;
+}
+.controle-gastos {
+  padding: 40px 15px;
+}
+.error {
+    color:red;
+    font-style:italic;
+}
